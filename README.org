@@ -1,0 +1,26 @@
+#+TITLE:Timbre syslog appender
+
+Third-party timbre syslog appender with remote host support.
+
+* Usage
+
+Add to ~deps.edn~:
+
+#+begin_src clojure
+{io.github.rrudakov/timbre-syslog-remote {:git/tag "0.1.1" :git/sha ""}}
+#+end_src
+
+Register appender:
+
+#+begin_src clojure
+(require '[io.rrudakov.timbre.syslog :refer [syslog-appender]])
+
+(binding [timbre/*config*
+          (assoc-in timbre/*config* [:appenders :syslog]
+                    (syslog-appender {:host           "logs2.papertrailapp.com"
+                                      :port           99999
+                                      :no-stacktrace? true
+                                      :ident          "application.name"}))]
+
+  (timbre/infof "This is my info %d" (rand-int 999)))
+#+end_src

@@ -1,0 +1,13 @@
+{:tasks
+ {build:clean
+  {:doc  "Remove target directory"
+   :task (clojure "-T:build" "clean")}
+
+  build:jar
+  {:doc     "Build library jar"
+   :depends [build:clean]
+   :task    (clojure "-T:build" "jar")}
+
+  release
+  {:doc  "Create a new tag with release version"
+   :task (clojure "-T:build" "release")}}}
