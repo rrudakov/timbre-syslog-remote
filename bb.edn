@@ -10,4 +10,9 @@
 
   release
   {:doc  "Create a new tag with release version"
-   :task (clojure "-T:build" "release")}}}
+   :task (clojure "-T:build" "release")}
+
+  deploy:clojars
+  {:doc     "Deploy library to clojars"
+   :depends [build:jar]
+   :task    (clojure "-T:build" "deploy")}}}

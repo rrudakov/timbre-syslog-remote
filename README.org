@@ -1,16 +1,35 @@
 #+TITLE:Timbre syslog appender
 
+[[https://clojars.org/net.clojars.rrudakov/timbre-syslog-remote][https://img.shields.io/clojars/v/net.clojars.rrudakov/timbre-syslog-remote.svg]]
+
 Third-party timbre syslog appender with remote host support.
+
+The main purpose of this library is to provide a direct integration of
+timbre and [[https://papertrailapp.com][Papertrail]].
+
+The format of messages is compliant with [[https://www.rfc-editor.org/rfc/rfc3164][RFC 3164]].
+
+* Status
+
+The library is tested with papertrail and I don't expect any breaking
+changes. It's not tested with localhost, but it should work if syslog is
+configured properly (it should listen to the port 514).
 
 * Usage
 
-Add to ~deps.edn~:
+** ~deps.edn~
 
 #+begin_src clojure
-{io.github.rrudakov/timbre-syslog-remote {:git/tag "0.1.1" :git/sha ""}}
+net.clojars.rrudakov/timbre-syslog-remote {:mvn/version "0.1.3"}
 #+end_src
 
-Register appender:
+** Leiningen
+
+#+begin_src clojure
+[net.clojars.rrudakov/timbre-syslog-remote "0.1.3"]
+#+end_src
+
+** Register appender
 
 #+begin_src clojure
 (require '[io.rrudakov.timbre.syslog :refer [syslog-appender]])
@@ -24,3 +43,21 @@ Register appender:
 
   (timbre/infof "This is my info %d" (rand-int 999)))
 #+end_src
+
+* Configuration
+
+All configuration parameters are optional.
+
+- ~:host~ :: remote host to connect (default: ~localhost~)
+- ~:port~ :: UDP port (default: ~514~)
+- ~:ident~ :: application name (default: ~nil~)
+- ~:no-stacktrace?~ :: if ~false~ stacktraces will be logged (default:
+  ~false~)
+
+** stacktraces
+
+Syslog doesn't support multiline log messages by default, but sometimes
+it's useful to print exceptions with stacktraces. If option
+~:no-stacktrace?~ is ~false~, stacktrace will be sent line by line:
+
+[[file:docs/img/stacktrace.png]]
