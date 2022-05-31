@@ -44,5 +44,5 @@
               :artifact       (b/resolve-path jar-file)
               :pom-file       (b/pom-path {:lib       lib
                                            :class-dir class-dir})
-              :sign-releases? true})
+              :sign-releases? false})
   (println "Deployed successfully"))
