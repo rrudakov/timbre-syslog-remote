@@ -21,10 +21,10 @@
                 :version   version
                 :basis     basis
                 :src-dirs  ["src"]
-                :scm       {:tag                 "HEAD"
-                            :connection          (str "scm:git:" scm-url)
-                            :developerConnection (str "scm:git:" scm-url)
-                            :url                 scm-url}})
+                :scm       {:tag                 version
+                            :connection          (str "scm:git:git://github.com/rrudakov/timbre-syslog-remote")
+                            :developerConnection (str "scm:git:ssh://git@github.com:rrudakov/timbre-syslog-remote.git")
+                            :url                 "https://github.com/rrudakov/timbre-syslog-remote"}})
   (println "Copy sources and resources")
   (b/copy-dir {:src-dirs   ["src"]
                :target-dir class-dir})
