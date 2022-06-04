@@ -147,6 +147,15 @@
            (str "\n" (str/join "\n" st-prefixed))))))))
 
 (defn syslog-appender
+  "Return new timbre appender which publish messages to remote syslog.
+
+  The function accepts a single map with the following keys:
+  - `:host` - remote host to connect (default: `localhost`)
+  - `:port` - UDP port (default: `514`)
+  - `:ident` - application identity, part of RFC 3164 (default: `nil`)
+  - `:no-stacktrace?` - whether publish or not stacktraces (default: `true`)
+
+  It's not recommended to modify the `:output-fn`. "
   [{:keys [host port facility ident no-stacktrace?]
     :or   {facility       :log-user
            host           "localhost"
