@@ -1,6 +1,7 @@
 #+TITLE:Timbre syslog appender
 
 [[https://clojars.org/net.clojars.rrudakov/timbre-syslog-remote][https://img.shields.io/clojars/v/net.clojars.rrudakov/timbre-syslog-remote.svg]]
+[[https://cljdoc.org/d/net.clojars.rrudakov/timbre-syslog-remote][https://cljdoc.org/badge/net.clojars.rrudakov/timbre-syslog-remote]]
 
 Third-party timbre syslog appender with remote host support.
 
