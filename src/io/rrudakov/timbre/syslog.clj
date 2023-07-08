@@ -4,8 +4,10 @@
   (:import
    (java.io IOException PrintWriter StringWriter)
    (java.net DatagramPacket DatagramSocket InetAddress InetSocketAddress)
-   (java.time ZoneId)
+   (java.time LocalDateTime ZoneId)
    (java.time.format DateTimeFormatter)))
+
+(set! *warn-on-reflection* true)
 
 (def ^:private syslog-udp-port 514)
 (def ^:private syslog-ts-formatter (DateTimeFormatter/ofPattern "LLL dd HH:mm:ss"))
@@ -84,14 +86,15 @@
    :log-local7   23})
 
 (defn- format-ts
-  [ts]
+  [^java.util.Date ts]
   (let [local-date-time (-> ts
                             (.toInstant)
                             (.atZone (ZoneId/systemDefault))
                             (.toLocalDateTime))]
-    (.format syslog-ts-formatter local-date-time)))
+    (.format ^DateTimeFormatter syslog-ts-formatter
+             ^LocalDateTime local-date-time)))
 
-(defn- socket-connect
+(defn- socket-connect ^DatagramSocket
   [inet-socket-address]
   (doto (DatagramSocket.)
     (.connect inet-socket-address)))
@@ -102,17 +105,21 @@
           (level level->syslog-priority)))
 
 (defn- send-datagram-packet
-  [socket inet-address port prefix message]
+  [socket
+   ^InetAddress inet-address
+   ^Integer port
+   ^String prefix
+   ^String message]
   (try
-    (let [message-bytes (byte-array (into [] (comp
-                                              cat
-                                              (take 1024))
-                                          [prefix
-                                           (.getBytes message)
-                                           [(byte 0)]]))
+    (let [message-bytes (->> [prefix (.getBytes message) [(byte 0)]]
+                             (into [] (comp cat (take 1024)))
+                             (byte-array))
           message-size  (count message-bytes)
-          packet        (DatagramPacket. message-bytes message-size inet-address port)]
-      (.send @socket packet))
+          packet        (DatagramPacket. message-bytes
+                                         message-size
+                                         inet-address
+                                         port)]
+      (.send ^DatagramSocket @socket packet))
     (catch IOException _
       (let [inet-socket-address (InetSocketAddress. inet-address port)]
         (reset! socket (socket-connect inet-socket-address))
@@ -138,7 +145,7 @@
      "[" (or ?ns-str ?file "?") ":" (or ?line "?") "] - "
      (force msg_)
      (when-not no-stacktrace?
-       (when-let [err ?err]
+       (when-let [^Exception err ?err]
          (let [sw          (StringWriter.)
                pw          (PrintWriter. sw)
                _           (.printStackTrace err pw)
@@ -162,7 +169,8 @@
            port           syslog-udp-port
            no-stacktrace? true}}]
   (let [inet-address        (InetAddress/getByName host)
-        inet-socket-address (InetSocketAddress. inet-address port)
+        inet-socket-address (InetSocketAddress. ^InetAddress inet-address
+                                                ^int port)
         socket              (atom (socket-connect inet-socket-address))
         ident-str           (when ident
                               (if (str/ends-with? (str/trim ident) ":")
