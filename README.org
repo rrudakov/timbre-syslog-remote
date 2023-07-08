@@ -20,13 +20,13 @@ configured properly (it should listen to the port 514).
 ** ~deps.edn~
 
 #+begin_src clojure
-net.clojars.rrudakov/timbre-syslog-remote {:mvn/version "0.1.3"}
+net.clojars.rrudakov/timbre-syslog-remote {:mvn/version "0.2.8"}
 #+end_src
 
 ** Leiningen
 
 #+begin_src clojure
-[net.clojars.rrudakov/timbre-syslog-remote "0.1.3"]
+[net.clojars.rrudakov/timbre-syslog-remote "0.2.8"]
 #+end_src
 
 ** Register appender
