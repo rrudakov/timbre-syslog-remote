@@ -3,6 +3,6 @@
  :deps {}
 
  :aliases
- {:build {:deps       {io.github.clojure/tools.build {:mvn/version "0.9.4"}
-                       slipset/deps-deploy           {:mvn/version "0.2.1"}}
+ {:build {:deps       {io.github.clojure/tools.build {:mvn/version "0.10.6"}
+                       slipset/deps-deploy           {:mvn/version "0.2.2"}}
           :ns-default build}}}
